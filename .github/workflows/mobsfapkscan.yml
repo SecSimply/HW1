@@ -32,6 +32,9 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
+      - name: Debug APK path
+        run: find . -name "*.apk" -type f
+
       - name: Upload and scan APK
         env:
           MOBSF_API_KEY: ${{ secrets.MOBSF_API_KEY }}
