@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/input_text_1"
+        android:layout_width="354dp"
+        android:layout_height="101dp"
+        android:hint="Enter text here" />
+
+
+    <TextView
+        android:id="@+id/output_text"
+        android:layout_width="371dp"
+        android:layout_height="223dp"
+        android:text="Output will be displayed here" />
+
+
+    <Button
+        android:id="@+id/button_1"
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:text="Generate RSA Keypair" />
+
+    <Button
+        android:id="@+id/button_2"
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:text="Generate ECC Keypair" />
+
+    <Button
+        android:id="@+id/button_3"
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:text="Sign message with ECC key" />
+
+    <Button
+        android:id="@+id/button_4"
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:text="Encrypt GUID with RSA Key" />
+    <Button
+        android:id="@+id/button_5"
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:text="Export public keys as base64" />
+    <Button
+        android:id="@+id/button_6"
+        android:layout_width="390dp"
+        android:layout_height="wrap_content"
+        android:text="Delete Keys" />
+
+</LinearLayout>
