@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat;
 
 /**
  * A utility class to check various system settings and permissions.
- * The results are logged to Logcat.
+ * The results are logged to Logcat. i need to make a change for commiting
  */
 public class CheckSystem {
 
