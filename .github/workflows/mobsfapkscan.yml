@@ -1,0 +1,72 @@
+name: MobSF APK Scan
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mobsf-apk-scan:
+    runs-on: ubuntu-latest
+    services:
+      mobsf:
+        image: opensecurity/mobile-security-framework-mobsf:latest
+        ports:
+          - 8000:8000
+        env:
+          MOBSF_API_KEY: ${{ secrets.MOBSF_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build APK
+        run: ./gradlew assembleRelease
+
+      - name: Wait for MobSF to be ready
+        run: |
+          echo "Waiting for MobSF..."
+          for i in $(seq 1 30); do
+            if curl -s http://localhost:8000/ > /dev/null; then
+              echo "MobSF is ready"; break
+            fi
+            sleep 5
+          done
+
+      - name: Upload and scan APK
+        env:
+          MOBSF_API_KEY: ${{ secrets.MOBSF_API_KEY }}
+          APK: app/build/outputs/apk/release/app-release.apk
+        run: |
+          HASH=$(curl -s \
+            -F "file=@${APK}" \
+            -H "X-Mobsf-Api-Key: ${MOBSF_API_KEY}" \
+            http://localhost:8000/api/v1/upload | jq -r '.hash')
+
+          curl -s -X POST \
+            -H "X-Mobsf-Api-Key: ${MOBSF_API_KEY}" \
+            -d "hash=${HASH}" \
+            http://localhost:8000/api/v1/scan > /dev/null
+
+          curl -s -X POST \
+            -H "X-Mobsf-Api-Key: ${MOBSF_API_KEY}" \
+            -d "hash=${HASH}" \
+            http://localhost:8000/api/v1/report_json \
+            -o mobsf-apk-report.json
+
+          curl -s -X POST \
+            -H "X-Mobsf-Api-Key: ${MOBSF_API_KEY}" \
+            -d "hash=${HASH}" \
+            http://localhost:8000/api/v1/download_pdf \
+            -o mobsf-apk-report.pdf
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobsf-apk-reports
+          path: |
+            mobsf-apk-report.json
+            mobsf-apk-report.pdf
