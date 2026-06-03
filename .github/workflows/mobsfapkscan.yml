@@ -37,7 +37,7 @@ jobs:
       - name: Upload and scan APK
         env:
           MOBSF_API_KEY: ${{ secrets.MOBSF_API_KEY }}
-          APK: app/build/outputs/apk/release/app-release.apk
+          APK: app/build/outputs/apk/release/app-release-unsigned.apk
         run: |
           HASH=$(curl -s \
             -F "file=@${APK}" \
